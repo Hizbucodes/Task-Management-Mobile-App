@@ -13,32 +13,34 @@ import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import KeyBoardAvoid from "../../components/KeyBoardAvoid/KeyBoardAvoid";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../config/FirebaseConfig/FirebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
+
 const dimensions = Dimensions.get("window");
 
-const Login = () => {
+const Register = () => {
   const { control, handleSubmit } = useForm({
     defaultValues: {
+      username: "",
       email: "",
       password: "",
     },
   });
-
   const navigation = useNavigation();
 
-  const onSignInPressed = async (data) => {
+  const onSignUpPressed = async (data) => {
     try {
-      const user = await signInWithEmailAndPassword(
+      const user = await createUserWithEmailAndPassword(
         auth,
         data.email,
         data.password
       );
+
       if (user) {
         navigation.replace("home");
       }
     } catch (error) {
-      alert(`Sign in failed: ${error.message}`);
+      alert(`Sign up failed: ${error.message}`);
     }
   };
 
@@ -54,10 +56,19 @@ const Login = () => {
         </View>
 
         <Text variant="bodyLarge" style={styles.subHeading}>
-          Welcome back you've been missed
+          Welcome to Task Manager, Let's make your Todo's
         </Text>
 
         <View style={styles.inputContainer}>
+          <View style={styles.usernameContainer}>
+            <CustomInput
+              name="username"
+              label="Enter Username"
+              control={control}
+              rules={{ required: "Username is required" }}
+            />
+          </View>
+
           <View style={styles.emailContainer}>
             <CustomInput
               name="email"
@@ -79,17 +90,17 @@ const Login = () => {
         </View>
 
         <CustomButton
-          title="Sign in"
+          title="Sign up"
           color={Colors.primary}
           style={styles.buttonStyle}
-          onPress={handleSubmit(onSignInPressed)}
+          onPress={handleSubmit(onSignUpPressed)}
         />
 
         <View style={styles.signUpContainer}>
-          <Text variant="bodyLarge">Don't have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("register")}>
+          <Text variant="bodyLarge">Already have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Text variant="bodyLarge" style={styles.signUpText}>
-              Sign up
+              Sign in
             </Text>
           </TouchableOpacity>
         </View>
@@ -98,7 +109,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
 
 const styles = StyleSheet.create({
   container: {
@@ -119,8 +130,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   subHeading: {
-    marginLeft: 50,
     marginTop: 100,
+    textAlign: "justify",
+    width: 300,
+    marginLeft: 50,
   },
   inputContainer: {
     width: 400,
