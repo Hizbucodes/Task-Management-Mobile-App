@@ -1,20 +1,16 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { StyleSheet, View } from "react-native";
+import { PaperProvider } from "react-native-paper";
+import KeyBoardAvoid from "./components/KeyBoardAvoid/KeyBoardAvoid";
+import "./global.css";
+import StackNavigator from "./navigation/StackNavigator/StackNavigator";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Text>Hello World</Text>
-    </View>
+    <PaperProvider>
+      <NavigationContainer>
+        <StackNavigator />
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
